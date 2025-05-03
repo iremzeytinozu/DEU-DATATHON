@@ -33,26 +33,24 @@ Yalnızca Python listesi formatında 3 eyalet döndür: örneğin ["Arizona", "N
 
 
 def choose_safest_state_via_llm(origin_state: str, date: str, death_data: dict, similar_states: list) -> str:
-    death_info_str = "\n".join([f"{state}: {death_data[state]}" for state in death_data])
-    
+    relevant_states = [origin_state] + similar_states
+    death_info_str = "\n".join([f"{state}: {death_data[state]}" for state in relevant_states if state in death_data])
+
     prompt = f"""
 Aşağıda {date} tarihi için bazı ABD eyaletlerinde tahmin edilen ölüm sayıları verilmiştir.
 Lütfen {origin_state} eyaletini de dahil ederek listedeki tüm eyaletleri karşılaştır.
 
-Amacın, seyahat için en güvenli eyaleti seçmektir.
+Amacın, seyahat için **en güvenli eyaleti** eyaleti seçmektir.
 
 Ölüm verileri (eyalet: ölüm sayısı):
 {death_info_str}
 
 Kurallar:
+- Ölüm verilerini göster.
 - Tahmini ölüm sayısı en düşük olan eyaleti seç.
-- Eğer {origin_state} en güvenliyse, onu öner ve nedenlerini söyle.
-- Eğer başka bir eyalet daha güvenliyse, onu öner ve kullanıcıya şu şekilde açıkla:
-  - Neden bu eyalet daha güvenli?
-  - Hangi yönlerden {origin_state} eyaletine benziyor? (iklim, coğrafya, kültür gibi)
+- Kullanıcıya şu şekilde açıkla:
+  - Eğer en güvenli eyalet **{origin_state}** değilse, en güvenli eyalet hangi yönlerden {origin_state} eyaletine benziyor? (iklim, coğrafya, kültür gibi)
   - Kullanıcıya dostça, sohbet eder gibi açıkla. Kısa ama sıcak bir öneri yap.
-
-Yalnızca açıklayıcı bir metin döndür.
 """
     try:
         response = llm.invoke(prompt).content
@@ -60,6 +58,7 @@ Yalnızca açıklayıcı bir metin döndür.
     except Exception as e:
         print("Karar LLM hatası:", e)
         return "Karar verilemedi."
+
 
 def extract_list_from_response(response: str) -> list[str]:
     try:
