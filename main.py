@@ -33,7 +33,7 @@ Yalnızca Python listesi formatında 3 eyalet döndür: örneğin ["Arizona", "N
 
 
 def choose_safest_state_via_llm(origin_state: str, date: str, death_data: dict, similar_states: list) -> str:
-    filtered_death_data = {state: death_data[state] for state in similar_states if state in death_data}
+    death_info_str = "\n".join([f"{state}: {death_data[state]}" for state in death_data])
     
     prompt = f"""
 Aşağıda {date} tarihi için bazı ABD eyaletlerinde tahmin edilen ölüm sayıları verilmiştir.
@@ -41,7 +41,8 @@ Lütfen {origin_state} eyaletini de dahil ederek listedeki tüm eyaletleri karş
 
 Amacın, seyahat için en güvenli eyaleti seçmektir.
 
-Ölüm verileri (eyalet: ölüm sayısı): {filtered_death_data}
+Ölüm verileri (eyalet: ölüm sayısı):
+{death_info_str}
 
 Kurallar:
 - Tahmini ölüm sayısı en düşük olan eyaleti seç.
