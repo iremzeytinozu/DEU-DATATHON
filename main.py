@@ -408,6 +408,9 @@ Verilere göre, **1 milyon kişi başına ölüm oranı** en düşük olan eyale
 Lütfen kullanıcıya şu şekilde açıklama yap:
 - Her eyaletteki her iki hastalık için ölüm sayılarını ve genel ölüm oranını göster.
 - **{safest_state}** eyaletini neden en güvenli seçenek olarak önerdiğini açıkla.
+- **{safest_state}** eyaletini neden en güvenli seçenek olarak önerdiğini açıkla.
+- Eğer {state.title()} değilse:
+  - {state.title()} ile {safest_state} arasındaki benzerlikleri belirt (iklim, coğrafya, kültür gibi).
 - Kullanıcıya sohbet eder gibi, sıcak ve kısa bir öneride bulun.
 """
 
